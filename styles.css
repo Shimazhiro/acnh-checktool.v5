@@ -1,0 +1,597 @@
+/* styles.css */
+
+:root{
+  --bg:#f6f7fb;
+  --card:#ffffff;
+  --text:#0b1220;
+  --muted:#58627a;
+  --accent: rgb(121,205,192);
+  --border:rgba(10,20,40,.10);
+  --shadow:0 6px 18px rgba(10,20,40,.08);
+  --highlight:#fff3d7; /* 目に優しい淡いクリーム */
+}
+
+*{box-sizing:border-box}
+html{ -webkit-text-size-adjust:100%; }
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,"Hiragino Kaku Gothic ProN","Noto Sans JP",sans-serif;
+  overflow-x:hidden;
+}
+
+/* ========= header (smart / compact) ========= */
+.topbar{
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: rgba(246,247,251,.86);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--border);
+  box-shadow: 0 8px 22px rgba(10,20,40,.06);
+  padding:
+    calc(10px + env(safe-area-inset-top))
+    calc(12px + env(safe-area-inset-right))
+    8px
+    calc(12px + env(safe-area-inset-left));
+  transition: padding .18s ease, box-shadow .18s ease;
+}
+
+.topbarInner{
+  max-width: 1180px;
+  margin: 0 auto;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+}
+
+.brand{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  min-width:0;
+  font-weight:900;
+  letter-spacing:.02em;
+}
+
+.appIcon{
+  width:30px;
+  height:30px;
+  border-radius:10px;
+  box-shadow: 0 8px 18px rgba(10,20,40,.10);
+  flex:0 0 auto;
+}
+
+.brandText{
+  min-width:0;
+  display:flex;
+  flex-direction:column;
+  line-height:1.08;
+}
+.brandTitle{
+  font-size:16px;
+  font-weight:950;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.brandSub{
+  font-size:12px;
+  font-weight:800;
+  color:rgba(0,0,0,.55);
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+/* --- tabs (NO "plate") --- */
+.tabsWrap{
+  margin:0;
+  display:flex;
+  justify-content:flex-end;
+  transition: max-height .18s ease, opacity .14s ease, transform .18s ease;
+}
+
+/* tabs の“隠れる”状態（JSが .tabsHidden を付与） */
+.tabsWrap.tabsHidden{
+  opacity:1;
+  transform:none;
+  pointer-events:auto;
+  max-height:none;
+  overflow:visible;
+}
+
+.tabs{
+  display:inline-flex;
+  gap:8px;
+  padding:0;
+  margin:0;
+  background:transparent;
+  border:0;
+  box-shadow:none;
+  flex-wrap:nowrap;
+}
+
+.tab{
+  appearance:none;
+  border:1px solid var(--border);
+  background: rgba(255,255,255,.78);
+  color: rgba(0,0,0,.82);
+  border-radius:999px;
+  padding: 8px 12px;
+  min-height:40px;
+  cursor:pointer;
+  font-weight:900;
+  font-size:14px;
+  line-height:1;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:6px;
+  -webkit-tap-highlight-color: transparent;
+  transition: background-color .12s ease, border-color .12s ease, transform .06s ease, color .12s ease;
+}
+.tab:active{ transform: translateY(1px); }
+.tab.active{
+  background: var(--accent);
+  border-color: transparent;
+  color:#fff;
+  box-shadow: 0 10px 22px rgba(121,205,192,.18);
+}
+
+.topbar.compact{
+  padding:
+    calc(6px + env(safe-area-inset-top))
+    calc(12px + env(safe-area-inset-right))
+    6px
+    calc(12px + env(safe-area-inset-left));
+  box-shadow: 0 6px 16px rgba(10,20,40,.06);
+}
+.topbar.compact .brandSub{ display:none; }
+.topbar.compact .appIcon{ width:26px; height:26px; border-radius:9px; }
+.topbar.compact .brandTitle{ font-size:15px; }
+.topbar.compact .tab{ min-height:36px; padding:7px 10px; font-size:13px; }
+
+/* mobile */
+@media (max-width: 640px){
+  .topbar{ padding-bottom: 6px; }
+
+  .topbarInner{
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+
+  .tabsWrap{ justify-content:center; }
+  .tabs{
+    width:100%;
+    justify-content:space-between;
+    gap:6px;
+  }
+  .tab{
+    flex:1 1 auto;
+    text-align:center;
+    min-height:38px;
+    padding:8px 10px;
+  }
+
+  .brandSub{ display:none; }
+
+  /* ==============================
+     ★ここが本題：スマホで compact 時は「タブだけ」表示
+     - ロゴ/タイトル（.brand）を非表示
+     - 空白が残らないように、レイアウトをタブに寄せる
+     ============================== */
+  .topbar.compact{
+    /* さらに詰める（必要なら微調整OK） */
+    padding:
+      calc(6px + env(safe-area-inset-top))
+      calc(10px + env(safe-area-inset-right))
+      6px
+      calc(10px + env(safe-area-inset-left));
+  }
+
+  /* ロゴ＋タイトル行を丸ごと消す（= ロゴもタイトルも同じ処理） */
+  .topbar.compact .brand{ display:none !important; }
+
+  /* 2段レイアウトを維持したままだと gap が残るので 0 に */
+  .topbar.compact .topbarInner{
+    gap: 0 !important;
+  }
+
+  /* タブを先頭・フル幅で表示（余白を作らない） */
+  .topbar.compact .tabsWrap{
+    justify-content:center;
+    width:100%;
+    margin:0;
+  }
+  .topbar.compact .tabs{
+    width:100%;
+    justify-content:space-between;
+    gap:6px;
+  }
+  .topbar.compact .tab{
+    flex:1 1 auto;
+    min-height:38px;
+    padding:8px 10px;
+  }
+}
+
+/* ========= layout ========= */
+.container{
+  max-width:1180px;
+  margin:0 auto;
+  padding: 14px 12px calc(18px + env(safe-area-inset-bottom));
+}
+
+/* ========= cards / form ========= */
+.card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:12px;
+  margin:10px 0;
+  box-shadow:var(--shadow);
+}
+
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.label{color:var(--muted);font-size:12px}
+.small{font-size:12px;color:var(--muted)}
+
+input,select,button{font:inherit}
+button, input, select{ touch-action:manipulation; }
+
+input[type="time"],input[type="text"],select{
+  background:#fff;
+  color:var(--text);
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:8px 10px;
+}
+select:disabled,input:disabled{opacity:.55}
+
+/* iOS: フォーカスズーム抑止（16px以上） */
+@media (max-width: 520px){
+  input[type="text"], input[type="time"], select, button{ font-size:16px; }
+}
+
+.btn{
+  appearance:none;
+  border:1px solid var(--border);
+  background: rgba(255,255,255,.88);
+  color: rgba(0,0,0,.85);
+  padding:9px 12px;
+  border-radius:12px;
+  cursor:pointer;
+  font-weight:800;
+}
+.btn:active{ transform: translateY(1px); }
+.btn.primary{background:var(--accent);border-color:transparent;color:white}
+
+.sectionGrid{
+  display:grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap:12px;
+  margin-top:12px;
+}
+.filtersGrid{
+  display:grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap:12px;
+  margin-top:12px;
+}
+
+/* ★魚（filtersGrid.hasShadow）は「一括・場所・魚影・名前」の4列になりやすいので、PCは明示して崩れにくく */
+@media (min-width: 901px){
+  .filtersGrid.hasShadow{
+    grid-template-columns: minmax(180px, 220px) minmax(180px, 220px) minmax(180px, 220px) 1fr;
+    align-items:end;
+  }
+}
+
+.fitem{display:flex;flex-direction:column;gap:6px}
+.bulkSection .label{display:none;}
+.bulkBtns{display:flex;gap:8px;justify-content:flex-start;align-items:center;flex-wrap:wrap}
+.bulkBtns .btn{width:auto;white-space:nowrap;font-weight:900}
+.span2{grid-column: 1 / -1;}
+.spanAll{grid-column: 1 / -1;}
+.checksRow{gap:18px;}
+.nowrap{flex-wrap:nowrap}
+
+/* prevent select from forcing large widths */
+.sectionGrid select, .sectionGrid input { min-width: 0; }
+
+/* Input with clear button */
+.inputWithClear{ position:relative; display:flex; align-items:center; gap:6px; }
+.inputWithClear input{ flex:1; }
+.clearBtn{
+  width:34px; height:34px;
+  border:1px solid var(--border);
+  background: rgba(0,0,0,0.04);
+  border-radius:10px;
+  font-size:18px; line-height:1;
+  cursor:pointer;
+}
+.clearBtn:disabled{ opacity:0.35; cursor:default; }
+.inlineLabel{ font-size:12px; color:#555; white-space:nowrap; }
+
+.manualRow{align-items:flex-end;}
+.manualStack{display:flex;flex-direction:column;gap:4px;}
+.manualStack .inlineLabel{margin:0;white-space:nowrap;}
+.manualRow .manualStack select{min-width:72px;}
+
+/* Nowモード（手動）：ブロック化してレイアウト制御しやすく */
+.nowModeBlock{display:flex;flex-direction:column;gap:10px; align-items:flex-start;}
+.nowModeSelectRow{display:flex; justify-content:flex-start; width:100%;}
+.nowModeSelectRow select{max-width:220px;}
+.manualRow{display:flex; gap:10px; justify-content:flex-start; align-items:flex-end; flex-wrap:wrap;}
+.anytimeLabel{display:flex; gap:6px; align-items:center; padding-bottom:2px;}
+
+.manualTimeRow{display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap;}
+.manualTimeRow .manualHour{min-width:72px;}
+/* bulk default (desktop/tablet): keep compact buttons */
+.bulkSection .bulkBtns{display:flex;gap:8px;justify-content:flex-start;align-items:center;flex-wrap:wrap;}
+
+@media (max-width: 520px){
+  /* mobile: filters are 1 column in the exact order */
+  .sectionGrid{ grid-template-columns: 1fr; }
+  .filtersGrid{ grid-template-columns: 1fr; }
+
+  /* fish only: "場所" + "魚影" を同一行（2列）に */
+  .filtersGrid.hasShadow{ grid-template-columns: 1fr 1fr; }
+  .filtersGrid.hasShadow .nameItem{ grid-column: 1 / -1; }
+
+  /* Nowモード(手動)：
+     1行目: Nowモード/手動（セレクト）
+     2行目: 月 / 時間 / 全時間（左揃え・横並び） */
+  .nowModeBlock{ gap:8px; }
+  .nowModeSelectRow{ width:100%; }
+  .nowModeSelectRow select{ width:160px; }
+  .manualRow{ width:100%; flex-wrap:nowrap; gap:10px; justify-content:flex-start; }
+  .manualRow .manualMonth select,
+  .manualRow .manualHour select{ width:110px; }
+  .anytimeLabel{ padding-bottom:0; }
+
+  /* 一括：ボタンを1行フル（50% + 50%） */
+  .bulkSection .bulkBtns{
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+    gap:10px;
+    width:100%;
+  }
+  .bulkSection .bulkBtns .btn{ width:100%; }
+
+  /* チェック群：2列で順番どおりに並べる */
+  .checksRow{
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 14px;
+    row-gap: 8px;
+    align-items:center;
+  }
+  .checksRow > .row{
+    width:100%;
+    justify-content:flex-start;
+    gap:8px;
+    margin:0;
+  }
+
+  .clearBtn{ width:40px; height:40px; }
+}
+/* ========= table (desktop) ========= */
+.tableWrap{overflow:auto}
+.table{width:100%;border-collapse:collapse;min-width:920px}
+.table th,.table td{border-bottom:1px solid var(--border);padding:8px 6px;text-align:left;vertical-align:top}
+.table th{color:var(--muted);font-weight:800;font-size:12px;white-space:nowrap}
+
+.nameRow{display:flex;align-items:center;gap:8px;white-space:nowrap;overflow:hidden}
+.nameText{font-weight:900;overflow:hidden;text-overflow:ellipsis}
+
+.badge{
+  display:inline-block;
+  border:1px solid var(--border);
+  border-radius:999px;
+  padding:2px 8px;
+  color:var(--muted);
+  font-size:12px;
+  background:rgba(255,255,255,.85);
+}
+.badge.now{
+  color:#6a4d00;
+  border-color:rgba(120,90,10,.20);
+  background:rgba(255,243,215,.85);
+}
+
+.hidden{display:none}
+
+/* --- responsive “table card化” は残す（ただし現在は app.js でテーブルをスマホ非表示にしているので副作用なし） */
+@media (max-width: 640px){
+  .table{ min-width:0; }
+  .tableWrap{ overflow:visible; }
+  .table thead{display:none;}
+  .table, .table tbody, .table tr, .table td{display:block;width:100%;}
+  .table{border:0;}
+  .table tr{
+    border:1px solid rgba(0,0,0,.12);
+    border-radius:14px;
+    padding:10px 12px;
+    margin:10px 0;
+    background:#fff;
+  }
+  .table td{
+    border:0;
+    padding:6px 0;
+    display:flex;
+    justify-content:space-between;
+    gap:12px;
+  }
+  .table td::before{
+    content:attr(data-label);
+    font-weight:800;
+    color:rgba(0,0,0,.55);
+    flex:0 0 5.5em;
+  }
+  .table td.td-name{padding-top:2px;}
+  .table td.td-name::before{content:"";}
+  .table td.td-name{display:block;}
+  .table td.td-name .nameRow{display:flex;justify-content:space-between;gap:10px;align-items:center;}
+  .badge{max-width:100%;white-space:normal; word-break:break-word;}
+  .nameRow{ white-space:normal; }
+}
+
+/* ========= footer ========= */
+.footer{
+  position: sticky;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(246,247,251,.92);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-top: 1px solid var(--border);
+  padding:
+    10px
+    calc(12px + env(safe-area-inset-right))
+    calc(10px + env(safe-area-inset-bottom))
+    calc(12px + env(safe-area-inset-left));
+}
+
+/* ========= compact list base ========= */
+.cList{ display:flex; flex-direction:column; gap:8px; }
+.cRow{
+  border: 1px solid var(--border);
+  background: var(--card);
+  border-radius: 14px;
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+.cHead{ display:flex; align-items:center; gap:10px; padding: 12px 12px; cursor:pointer; }
+.cHead:focus-visible{ outline: 3px solid rgba(30,144,255,.35); outline-offset:-3px; }
+.cChk{ display:flex; align-items:center; gap:8px; flex:0 0 auto; }
+.cChk input{ width:20px; height:20px; }
+.cMain{ min-width:0; flex:1 1 auto; display:flex; flex-direction:column; gap:4px; }
+.cTopLine{ display:flex; align-items:center; gap:10px; min-width:0; }
+.cNo{ font-weight:900; font-size:12px; color: var(--muted); flex:0 0 auto; }
+.cIconBig{ flex:0 0 auto; display:flex; align-items:center; }
+.cIconBig .bugIcon,
+.cIconBig .fishIcon,
+.cIconBig .seaIcon,
+.cIconBig .fossilIcon{ width:52px; height:52px; border-radius:14px; min-width:52px; min-height:52px; }
+.cNameLine{ flex:1 1 auto; min-width:0; display:flex; align-items:center; }
+.cNameText{ font-weight:950; font-size:15px; color: var(--text); min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.badge.now.inlineNow{ margin-left:auto; }
+
+.cNameBtn{
+  appearance:none; border:0; background:transparent;
+  padding:0; margin:0; text-align:left;
+  font-weight:950; font-size:15px; color: var(--text);
+  min-width:0; flex:1 1 auto;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+  display:flex; align-items:center; gap:8px;
+}
+.cBadges{ display:flex; align-items:center; gap:6px; flex-wrap:wrap; }
+.cToggle{
+  border:1px solid var(--border);
+  background: rgba(255,255,255,.7);
+  border-radius: 10px;
+  padding: 8px 10px;
+  font-weight:900;
+}
+.cDetail{ padding: 0 12px 12px 12px; }
+.cGrid{ display:grid; grid-template-columns: 1fr 1fr; gap:8px; margin-top: 10px; }
+.cItem{ border:1px solid var(--border); background: rgba(255,255,255,.65); border-radius:12px; padding:10px; }
+.cLabel{ font-size:11px; color: var(--muted); font-weight:900; margin-bottom:4px; }
+.cVal{ font-size:13px; font-weight:900; color: var(--text); word-break: break-word; }
+
+@media (max-width: 360px){
+  .checksRow{ grid-template-columns: 1fr; }
+}
+
+/* Bug/Fish menu icons */
+.bugIcon,
+.fishIcon,
+.seaIcon,
+.fossilIcon{
+  width:22px; height:22px;
+  flex:0 0 auto;
+  border-radius:6px;
+  display:block;
+  min-width:22px;
+  min-height:22px;
+}
+
+.bugNameText{
+  min-width:0;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+/* ===== mobile list layout (kept minimal here) ===== */
+@media (max-width: 640px){
+  .cHead{ align-items:center; }
+  .cNameText{
+    white-space:normal;
+    overflow:hidden;
+    text-overflow:clip;
+    display:-webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-height:1.2;
+  }
+  .cNameBtn{
+    white-space:normal;
+    overflow:hidden;
+    text-overflow:clip;
+    display:-webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-height:1.2;
+  }
+  .bugNameText{
+    white-space:normal;
+    display:-webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow:hidden;
+  }
+}
+
+/* ===== Fossil: bigger icons + single-column detail ===== */
+#view-fossil .fossilIcon{
+  width:64px;
+  object-fit: contain;
+  height:64px;
+  min-width:64px;
+  min-height:64px;
+  border-radius:16px;
+}
+#view-fossil .cIconBig .fossilIcon{
+  width:80px;
+  height:80px;
+  min-width:80px;
+  min-height:80px;
+  border-radius:18px;
+}
+#view-fossil .cGrid.fossilGrid{
+  grid-template-columns: 1fr;
+}
+@media (max-width: 640px){
+  #view-fossil .fossilIcon{
+    width:72px;
+    object-fit: contain;
+    height:72px;
+    min-width:72px;
+    min-height:72px;
+    border-radius:18px;
+  }
+  #view-fossil .cIconBig .fossilIcon{
+    width:92px;
+    height:92px;
+    min-width:92px;
+    min-height:92px;
+    border-radius:22px;
+  }
+}
